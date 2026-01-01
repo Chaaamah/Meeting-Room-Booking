@@ -73,6 +73,8 @@ Tous les endpoints sont accessibles via l'API Gateway sur le port **8080**.
 
 **GET** `http://localhost:8080/api/users/{id}`
 
+![GET Users](screens/getUserById.png)
+
 ---
 
 ### 2. Salles (MS Salles)
