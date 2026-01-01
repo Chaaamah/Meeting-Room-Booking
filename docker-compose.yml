@@ -1,0 +1,113 @@
+services:
+  # ===============================
+  # EUREKA SERVER
+  # ===============================
+  eureka-register:
+    build: ./eureka-register
+    restart: on-failure
+    ports:
+      - "8761:8761"
+    networks:
+      - reservation-network
+
+  # ===============================
+  # API GATEWAY
+  # ===============================
+  api-gateway:
+    build: ./apiGateWay
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-register
+    networks:
+      - reservation-network
+
+  # ===============================
+  # MICRO SERVICE USERS
+  # ===============================
+  ms-users:
+    build: ./msUsers
+    restart: on-failure
+    depends_on:
+      - eureka-register
+      - mysql-db
+    environment:
+<<<<<<< HEAD
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-register:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/users_db?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+=======
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/users_db?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-register:8761/eureka/
+>>>>>>> 13d93b99e182f4193c18721e8ea5bf5e81b2f120
+    networks:
+      - reservation-network
+
+  # ===============================
+  # MICRO SERVICE SALLES
+  # ===============================
+  ms-salles:
+    build: ./msSalles
+    restart: on-failure
+    depends_on:
+      - eureka-register
+      - mysql-db
+    environment:
+<<<<<<< HEAD
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-register:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/salles_db?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+=======
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/salles_db?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-register:8761/eureka/
+>>>>>>> 13d93b99e182f4193c18721e8ea5bf5e81b2f120
+    networks:
+      - reservation-network
+
+  # ===============================
+  # MICRO SERVICE RESERVATION
+  # ===============================
+  ms-reservation:
+    build: ./msReservation
+    restart: on-failure
+    depends_on:
+      - eureka-register
+      - mysql-db
+    environment:
+<<<<<<< HEAD
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-register:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/reservations_db?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+=======
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/reservations_db?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-register:8761/eureka/
+>>>>>>> 13d93b99e182f4193c18721e8ea5bf5e81b2f120
+    networks:
+      - reservation-network
+
+  # ===============================
+  # MYSQL DATABASE
+  # ===============================
+  mysql-db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3307:3306"
+    networks:
+      - reservation-network
+
+networks:
+  reservation-network:
+    driver: bridge
