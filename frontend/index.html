@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Salles de Réunion</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>MeetingHub</span>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard">
+                    <a href="#"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                </li>
+                <li data-target="salles">
+                    <a href="#"><i class="fa-solid fa-door-open"></i> Salles</a>
+                </li>
+                <li data-target="utilisateurs">
+                    <a href="#"><i class="fa-solid fa-users"></i> Utilisateurs</a>
+                </li>
+                <li data-target="reservations">
+                    <a href="#"><i class="fa-solid fa-calendar-check"></i> Réservations</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Bienvenue dans votre espace de gestion</p>
+                </div>
+                <div class="user-profile">
+                    <div class="notification">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=6366f1&color=fff" alt="User">
+                </div>
+            </header>
+
+            <!-- Sections -->
+            <div id="dashboard" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon-bg purple">
+                            <i class="fa-solid fa-door-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Salles</h3>
+                            <p class="stat-value" id="stats-total-salles">-</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon-bg blue">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Réservations</h3>
+                            <p class="stat-value" id="stats-total-reservations">-</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon-bg green">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Utilisateurs</h3>
+                            <p class="stat-value" id="stats-total-users">-</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Reservations Table preview could go here -->
+            </div>
+
+            <div id="salles" class="content-section">
+                <div class="section-actions">
+                    <button class="btn btn-primary" id="btn-add-salle"><i class="fa-solid fa-plus"></i> Nouvelle
+                        Salle</button>
+                    <!-- Add Salle Modal/Form could be triggered -->
+                </div>
+                <div class="cards-grid" id="salles-grid">
+                    <!-- Salles will be injected here via JS -->
+                </div>
+            </div>
+
+            <div id="utilisateurs" class="content-section">
+                <div class="section-actions">
+                    <button class="btn btn-primary" id="btn-add-user"><i class="fa-solid fa-plus"></i> Nouvel
+                        Utilisateur</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Users will be injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="reservations" class="content-section">
+                <div class="section-actions">
+                    <button class="btn btn-primary" id="btn-new-reservation"><i class="fa-solid fa-plus"></i> Nouvelle
+                        Réservation</button>
+                </div>
+
+                <!-- Booking Form (Hidden by default or in modal) -->
+                <div class="modal-overlay hidden" id="booking-form-container">
+                    <div class="form-card">
+                        <h3>Réserver une salle</h3>
+                        <form id="booking-form">
+                            <div class="form-group">
+                                <label>Utilisateur</label>
+                                <select id="booking-user" required>
+                                    <option value="">Sélectionner un utilisateur</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Salle</label>
+                                <select id="booking-room" required>
+                                    <option value="">Sélectionner une salle</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input type="date" id="booking-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Heure</label>
+                                    <input type="time" id="booking-time" required>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" id="btn-cancel-booking">Annuler</button>
+                                <button type="submit" class="btn btn-primary">Confirmer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Salle</th>
+                                <th>Utilisateur</th>
+                                <th>Date</th>
+                                <th>Heure</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservations-table-body">
+                            <!-- Reservations injected here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modals -->
+            <div id="modal-salle" class="modal-overlay hidden">
+                <div class="form-card" style="width:400px;">
+                    <h3>Nouvelle Salle</h3>
+                    <form id="form-salle">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" id="salle-nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Capacité</label>
+                            <input type="number" id="salle-capacite" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Equipement</label>
+                            <input type="text" id="salle-equipement">
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="document.getElementById('modal-salle').classList.add('hidden')">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Créer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="modal-user" class="modal-overlay hidden">
+                <div class="form-card" style="width:400px;">
+                    <h3>Nouvel Utilisateur</h3>
+                    <form id="form-user">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" id="user-nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="user-email" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary"
+                                onclick="document.getElementById('modal-user').classList.add('hidden')">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Créer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Room Details Modal -->
+            <div id="modal-salle-details" class="modal-overlay hidden">
+                <div class="form-card" style="width:400px; text-align: center;">
+                    <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-people-roof"></i>
+                    </div>
+                    <h3 id="detail-salle-nom" style="margin-bottom: 0.5rem;">Nom de la Salle</h3>
+                    <div class="detail-item" style="margin-bottom: 0.5rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-users"></i> Capacité: <span id="detail-salle-capacite"
+                            style="font-weight: bold; color: var(--text);"></span>
+                    </div>
+                    <div class="detail-item" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-plug"></i> Equipement: <span id="detail-salle-equipement"
+                            style="font-weight: bold; color: var(--text);"></span>
+                    </div>
+                    <div class="form-actions" style="justify-content: center;">
+                        <button type="button" class="btn btn-primary"
+                            onclick="document.getElementById('modal-salle-details').classList.add('hidden')">Fermer</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Details Modal -->
+            <div id="modal-user-details" class="modal-overlay hidden">
+                <div class="form-card" style="width:400px; text-align: center;">
+                    <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h3 id="detail-user-nom" style="margin-bottom: 0.5rem;">Nom de l'Utilisateur</h3>
+                    <div class="detail-item" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-envelope"></i> Email: <span id="detail-user-email"
+                            style="font-weight: bold; color: var(--text);"></span>
+                    </div>
+                    <div class="form-actions" style="justify-content: center;">
+                        <button type="button" class="btn btn-primary"
+                            onclick="document.getElementById('modal-user-details').classList.add('hidden')">Fermer</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reservation Details Modal -->
+            <div id="modal-reservation-details" class="modal-overlay hidden">
+                <div class="form-card" style="width:400px; text-align: center;">
+                    <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">Détails Réservation</h3>
+                    <div class="detail-item" style="margin-bottom: 0.5rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-people-roof"></i> Salle: <span id="detail-res-salle"
+                            style="font-weight: bold; color: var(--text);"></span>
+                    </div>
+                    <div class="detail-item" style="margin-bottom: 0.5rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-user"></i> Utilisateur: <span id="detail-res-user"
+                            style="font-weight: bold; color: var(--text);"></span>
+                    </div>
+                    <div class="detail-item" style="margin-bottom: 0.5rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-calendar"></i> Date: <span id="detail-res-date"
+                            style="font-weight: bold; color: var(--text);"></span>
+                    </div>
+                    <div class="detail-item" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-clock"></i> Heure: <span id="detail-res-heure"
+                            style="font-weight: bold; color: var(--text);"></span>
+                    </div>
+                    <div class="form-actions" style="justify-content: center;">
+                        <button type="button" class="btn btn-primary"
+                            onclick="document.getElementById('modal-reservation-details').classList.add('hidden')">Fermer</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js" type="module"></script>
+    <script src="js/app.js" type="module"></script>
+</body>
+
+</html>
