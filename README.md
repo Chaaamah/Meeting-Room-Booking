@@ -151,8 +151,11 @@ L'API Gateway route les requêtes vers les microservices appropriés:
 | Service          | Port |
 |------------------|------|
 | Eureka Server    | 8761 |
-| API Gateway      | 8080 |
+| API Gateway      | 8083 |
 | MySQL            | 3307 |
+| msUsers          | 8080 |
+| msSalles         | 8081 |
+| msReservation    | 8082 |
 
 ## Tests
 
